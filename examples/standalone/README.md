@@ -6,7 +6,10 @@ Deploy Redis service in standalone architecture by root module.
 # setup infra
 $ terraform apply -auto-approve \
   -target=alicloud_vpc.example \
-  -target=alicloud_vswitch.example
+  -target=alicloud_vswitch.example \
+  -target=alicloud_pvtz_zone.example \
+  -target=alicloud_pvtz_zone_attachment.example
+
 # create service
 $ terraform apply -auto-approve
 ```
@@ -36,6 +39,8 @@ $ terraform apply -auto-approve
 
 | Name | Type |
 |------|------|
+| [alicloud_pvtz_zone.example](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/resources/pvtz_zone) | resource |
+| [alicloud_pvtz_zone_attachment.example](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/resources/pvtz_zone_attachment) | resource |
 | [alicloud_vpc.example](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/resources/vpc) | resource |
 | [alicloud_vswitch.example](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/resources/vswitch) | resource |
 | [alicloud_zones.selected](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/data-sources/zones) | data source |

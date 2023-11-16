@@ -24,6 +24,8 @@ locals {
 data "alicloud_vpcs" "selected" {
   ids = [var.infrastructure.vpc_id]
 
+  status = "Available"
+
   lifecycle {
     postcondition {
       condition     = length(self.ids) == 1
@@ -33,12 +35,24 @@ data "alicloud_vpcs" "selected" {
 }
 
 data "alicloud_vswitches" "selected" {
-  vpc_id = var.infrastructure.vpc_id
+  vpc_id = data.alicloud_vpcs.selected.ids[0]
 
   lifecycle {
     postcondition {
       condition     = var.architecture == "Replication" ? length(self.ids) > 1 : length(self.ids) > 0
       error_message = "Failed to get available VSwitch"
+    }
+  }
+}
+
+data "alicloud_pvtz_zones" "selected" {
+  keyword     = var.infrastructure.domain_suffix
+  search_mode = "EXACT"
+
+  lifecycle {
+    postcondition {
+      condition     = length(self.ids) == 1
+      error_message = "Failed to get available private zone"
     }
   }
 }
@@ -121,6 +135,10 @@ data "alicloud_kvstore_instance_classes" "selected" {
   instance_charge_type = "PostPaid"
 }
 
+locals {
+  config_map = { for param in var.engine_parameters : param.name => param.value }
+}
+
 resource "alicloud_kvstore_instance" "default" {
   db_instance_name = local.fullname
   instance_type    = "Redis"
@@ -135,4 +153,19 @@ resource "alicloud_kvstore_instance" "default" {
   port     = 6379
 
   instance_class = data.alicloud_kvstore_instance_classes.selected.instance_classes[0]
+
+  config = local.config_map
+}
+
+#
+# Exposing
+#
+
+resource "alicloud_pvtz_zone_record" "default" {
+  zone_id = data.alicloud_pvtz_zones.selected.ids[0]
+
+  type  = "CNAME"
+  rr    = format("%s.%s", local.name, local.namespace)
+  value = alicloud_kvstore_instance.default.connection_domain
+  ttl   = 30
 }

@@ -96,6 +96,26 @@ components:
             - "4.0"
           x-walrus-ui:
             group: Basic
+        engine_parameters:
+          title: Engine Parameters
+          type: array
+          description: |
+            Specify the deployment parameters, see https://www.alibabacloud.com/help/zh/redis/user-guide/supported-parameters#concept-2087327.
+          default: [ ]
+          items:
+            properties:
+              name:
+                title: Name
+                type: string
+              value:
+                title: Value
+                type: string
+            required:
+              - name
+              - value
+            type: object
+          x-walrus-ui:
+            group: Basic
         password:
           title: Password
           type: string

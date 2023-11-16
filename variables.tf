@@ -87,12 +87,24 @@ EOF
   }
 }
 
+variable "engine_parameters" {
+  description = <<-EOF
+Specify the deployment parameters, see https://www.alibabacloud.com/help/zh/redis/user-guide/supported-parameters#concept-2087327.
+EOF
+  type = list(object({
+    name  = string
+    value = string
+  }))
+  default = []
+}
+
 variable "password" {
   description = <<-EOF
 Specify the account password.
 EOF
   type        = string
   default     = null
+  sensitive   = true
   validation {
     condition     = var.password == null || can(regex("^[A-Za-z0-9\\!#\\$%\\^&\\*\\(\\)_\\+\\-=]{16,32}", var.password))
     error_message = "Invalid password"
