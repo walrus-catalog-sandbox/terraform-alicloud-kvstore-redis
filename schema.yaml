@@ -1,0 +1,106 @@
+openapi: 3.0.3
+info:
+  title: OpenAPI schema for template terraform-alicloud-kvstore-redis
+components:
+  schemas:
+    variables:
+      required:
+        - infrastructure
+      type: object
+      properties:
+        context:
+          title: Context
+          type: object
+          description: |
+            Receive contextual information. When Walrus deploys, Walrus will inject specific contextual information into this field.
+
+            Examples:
+            ```
+            context:
+              project:
+                name: string
+                id: string
+              environment:
+                name: string
+                id: string
+              resource:
+                name: string
+                id: string
+            ```
+          default: {}
+          additionalProperties:
+            type: object
+          x-walrus-ui:
+            group: Basic
+            hidden: true
+        infrastructure:
+          title: Infrastructure
+          type: object
+          description: |
+            Specify the infrastructure information for deploying.
+
+            Examples:
+            ```
+            infrastructure:
+              vpc_id: string                  # the ID of the VPC where the redis service applies
+              kms_key_id: sting,optional      # the ID of the KMS key which to encrypt the redis data
+              domain_suffix: string           # a private DNS namespace of the CloudMap where to register the applied redis service
+            ```
+          required:
+            - domain_suffix
+            - vpc_id
+          properties:
+            domain_suffix:
+              title: Domain Suffix
+              type: string
+            kms_key_id:
+              title: Kms Key Id
+              type: string
+            vpc_id:
+              title: Vpc Id
+              type: string
+          x-walrus-ui:
+            group: Basic
+        architecture:
+          title: Architecture
+          type: string
+          description: |
+            Specify the deployment architecture, select from standalone or replication.
+          default: standalone
+          enum:
+            - standalone
+            - replication
+          x-walrus-ui:
+            group: Basic
+        replication_readonly_replicas:
+          title: Replication Readonly Replicas
+          type: number
+          description: |
+            Specify the number of read-only replicas under the replication deployment.
+          default: 1
+          enum:
+            - 1
+            - 3
+            - 5
+          x-walrus-ui:
+            group: Basic
+            showIf: architecture=replication
+        engine_version:
+          title: Engine Version
+          type: string
+          description: |
+            Specify the deployment engine version.
+          default: "5.0"
+          enum:
+            - "5.0"
+            - "4.0"
+          x-walrus-ui:
+            group: Basic
+        password:
+          title: Password
+          type: string
+          description: |
+            Specify the account password.
+          writeOnly: true
+          x-walrus-ui:
+            group: Basic

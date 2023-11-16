@@ -1,0 +1,56 @@
+# Replication Example
+
+Deploy Redis service in standalone architecture by root module.
+
+```bash
+# setup infra
+$ terraform apply -auto-approve \
+  -target=alicloud_vpc.example \
+  -target=alicloud_vswitch.example
+# create service
+$ terraform apply -auto-approve
+```
+
+<!-- BEGIN_TF_DOCS -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
+| <a name="requirement_alicloud"></a> [alicloud](#requirement\_alicloud) | >= 1.140.0 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.5.1 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_alicloud"></a> [alicloud](#provider\_alicloud) | >= 1.140.0 |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_this"></a> [this](#module\_this) | ../.. | n/a |
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [alicloud_vpc.example](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/resources/vpc) | resource |
+| [alicloud_vswitch.example](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/resources/vswitch) | resource |
+| [alicloud_zones.selected](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/data-sources/zones) | data source |
+
+## Inputs
+
+No inputs.
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_context"></a> [context](#output\_context) | n/a |
+| <a name="output_selector"></a> [selector](#output\_selector) | n/a |
+| <a name="output_endpoint_internal"></a> [endpoint\_internal](#output\_endpoint\_internal) | n/a |
+| <a name="output_endpoint_internal_readonly"></a> [endpoint\_internal\_readonly](#output\_endpoint\_internal\_readonly) | n/a |
+| <a name="output_password"></a> [password](#output\_password) | n/a |
+<!-- END_TF_DOCS -->
