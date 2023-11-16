@@ -50,8 +50,8 @@ No inputs.
 | Name | Description |
 |------|-------------|
 | <a name="output_context"></a> [context](#output\_context) | n/a |
-| <a name="output_selector"></a> [selector](#output\_selector) | n/a |
 | <a name="output_endpoint_internal"></a> [endpoint\_internal](#output\_endpoint\_internal) | n/a |
 | <a name="output_endpoint_internal_readonly"></a> [endpoint\_internal\_readonly](#output\_endpoint\_internal\_readonly) | n/a |
 | <a name="output_password"></a> [password](#output\_password) | n/a |
+| <a name="output_selector"></a> [selector](#output\_selector) | n/a |
 <!-- END_TF_DOCS -->
