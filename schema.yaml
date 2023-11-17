@@ -5,7 +5,7 @@ components:
   schemas:
     variables:
       required:
-        - infrastructure
+      - infrastructure
       type: object
       properties:
         context:
@@ -30,9 +30,13 @@ components:
           default: {}
           additionalProperties:
             type: object
+            x-walrus-ui:
+              colSpan: 12
           x-walrus-ui:
+            colSpan: 12
             group: Basic
             hidden: true
+            order: 1
         infrastructure:
           title: Infrastructure
           type: object
@@ -47,8 +51,8 @@ components:
               domain_suffix: string           # a private DNS namespace of the CloudMap where to register the applied redis service
             ```
           required:
-            - domain_suffix
-            - vpc_id
+          - domain_suffix
+          - vpc_id
           properties:
             domain_suffix:
               title: Domain Suffix
@@ -60,7 +64,9 @@ components:
               title: Vpc Id
               type: string
           x-walrus-ui:
+            colSpan: 12
             group: Basic
+            order: 2
         architecture:
           title: Architecture
           type: string
@@ -68,10 +74,11 @@ components:
             Specify the deployment architecture, select from standalone or replication.
           default: standalone
           enum:
-            - standalone
-            - replication
+          - standalone
+          - replication
           x-walrus-ui:
             group: Basic
+            order: 3
         replication_readonly_replicas:
           title: Replication Readonly Replicas
           type: number
@@ -79,11 +86,12 @@ components:
             Specify the number of read-only replicas under the replication deployment.
           default: 1
           enum:
-            - 1
-            - 3
-            - 5
+          - 1
+          - 3
+          - 5
           x-walrus-ui:
             group: Basic
+            order: 4
             showIf: architecture=replication
         engine_version:
           title: Engine Version
@@ -92,16 +100,17 @@ components:
             Specify the deployment engine version.
           default: "5.0"
           enum:
-            - "5.0"
-            - "4.0"
+          - "5.0"
+          - "4.0"
           x-walrus-ui:
             group: Basic
+            order: 5
         engine_parameters:
           title: Engine Parameters
           type: array
           description: |
             Specify the deployment parameters, see https://www.alibabacloud.com/help/zh/redis/user-guide/supported-parameters#concept-2087327.
-          default: [ ]
+          default: []
           items:
             properties:
               name:
@@ -111,16 +120,22 @@ components:
                 title: Value
                 type: string
             required:
-              - name
-              - value
+            - name
+            - value
             type: object
+            x-walrus-ui:
+              colSpan: 12
           x-walrus-ui:
+            colSpan: 12
             group: Basic
+            order: 6
         password:
           title: Password
           type: string
           description: |
             Specify the account password.
+          format: password
           writeOnly: true
           x-walrus-ui:
             group: Basic
+            order: 7
