@@ -46,8 +46,8 @@ components:
             Examples:
             ```
             infrastructure:
-              vpc_id: string                            # the ID of the VPC where the redis service applies
-              domain_suffix: string, optional           # a private DNS namespace of the CloudMap where to register the applied redis service
+              vpc_id: string                            # the ID of the VPC where the Redis service applies
+              domain_suffix: string, optional           # a private DNS namespace of the PrivateZone where to register the applied Redis service
             ```
           required:
           - vpc_id
@@ -63,7 +63,7 @@ components:
               title: Vpc Id
               type: string
               description: |
-                Specify the ID of the VPC where the redis service applies.
+                Specify the ID of the VPC where the Redis service applies.
               x-walrus-ui:
                 order: 1
           x-walrus-ui:
@@ -137,7 +137,7 @@ components:
           title: Password
           type: string
           description: |
-            Specify the account password.
+            Specify the account password. If not specified, it will generate a random password.
           format: password
           writeOnly: true
           x-walrus-ui:

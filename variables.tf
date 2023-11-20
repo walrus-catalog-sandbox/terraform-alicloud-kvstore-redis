@@ -35,8 +35,8 @@ Specify the infrastructure information for deploying.
 Examples:
 ```
 infrastructure:
-  vpc_id: string                            # the ID of the VPC where the redis service applies
-  domain_suffix: string, optional           # a private DNS namespace of the CloudMap where to register the applied redis service
+  vpc_id: string                            # the ID of the VPC where the Redis service applies
+  domain_suffix: string, optional           # a private DNS namespace of the PrivateZone where to register the applied Redis service
 ```
 EOF
   type = object({

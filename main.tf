@@ -7,6 +7,7 @@ locals {
   resource_id      = coalesce(try(var.context["resource"]["id"], null), "example_id")
 
   namespace = join("-", [local.project_name, local.environment_name])
+
   tags = {
     "walrus.seal.io/project-id"       = local.project_id
     "walrus.seal.io/environment-id"   = local.environment_id
@@ -15,6 +16,8 @@ locals {
     "walrus.seal.io/environment-name" = local.environment_name
     "walrus.seal.io/resource-name"    = local.resource_name
   }
+
+  architecture = coalesce(var.architecture, "standalone")
 }
 
 #
@@ -39,7 +42,7 @@ data "alicloud_vswitches" "selected" {
 
   lifecycle {
     postcondition {
-      condition     = var.architecture == "Replication" ? length(self.ids) > 1 : length(self.ids) > 0
+      condition     = local.architecture == "Replication" ? length(self.ids) > 1 : length(self.ids) > 0
       error_message = "Failed to get available VSwitch"
     }
   }
@@ -132,8 +135,8 @@ data "alicloud_kvstore_instance_classes" "selected" {
   engine               = "Redis"
   engine_version       = local.version
   zone_id              = data.alicloud_zones.selected.zones[0].id
-  architecture         = var.architecture == "replication" ? "rwsplit" : "standard"
-  node_type            = var.architecture == "replication" ? local.node_type_map[var.replication_readonly_replicas] : null
+  architecture         = local.architecture == "replication" ? "rwsplit" : "standard"
+  node_type            = local.architecture == "replication" ? local.node_type_map[var.replication_readonly_replicas] : null
   instance_charge_type = "PostPaid"
 }
 
