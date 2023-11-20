@@ -29,31 +29,13 @@ resource "alicloud_vswitch" "example" {
   cidr_block = alicloud_vpc.example.cidr_block
 }
 
-# create private dns.
-
-#data "alicloud_pvtz_service" "selected" {
-#  enable = "On"
-#}
-
-resource "alicloud_pvtz_zone" "example" {
-  zone_name = "my-dev-dns"
-
-  #  depends_on = [data.alicloud_pvtz_service.selected]
-}
-
-resource "alicloud_pvtz_zone_attachment" "example" {
-  zone_id = alicloud_pvtz_zone.example.id
-  vpc_ids = [alicloud_vpc.example.id]
-}
-
 # create redis service.
 
 module "this" {
   source = "../.."
 
   infrastructure = {
-    vpc_id        = alicloud_vpc.example.id
-    domain_suffix = alicloud_pvtz_zone.example.zone_name
+    vpc_id = alicloud_vpc.example.id
   }
 
   architecture                  = "replication"

@@ -46,6 +46,8 @@ data "alicloud_vswitches" "selected" {
 }
 
 data "alicloud_pvtz_zones" "selected" {
+  count = var.infrastructure.domain_suffix == null ? 0 : 1
+
   keyword     = var.infrastructure.domain_suffix
   search_mode = "EXACT"
 
@@ -162,7 +164,9 @@ resource "alicloud_kvstore_instance" "default" {
 #
 
 resource "alicloud_pvtz_zone_record" "default" {
-  zone_id = data.alicloud_pvtz_zones.selected.ids[0]
+  count = var.infrastructure.domain_suffix == null ? 0 : 1
+
+  zone_id = data.alicloud_pvtz_zones.selected[0].ids[0]
 
   type  = "CNAME"
   rr    = format("%s.%s", local.name, local.namespace)
