@@ -98,7 +98,7 @@ EOF
 
 variable "password" {
   description = <<-EOF
-Specify the account password.
+Specify the account password. The password must be 16-32 characters long and start with any letter, number, or the following symbols: ! # $ % ^ & * ( ) _ + - =.
 EOF
   type        = string
   default     = null

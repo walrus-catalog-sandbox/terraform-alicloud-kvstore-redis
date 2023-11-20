@@ -137,7 +137,7 @@ components:
           title: Password
           type: string
           description: |
-            Specify the account password. If not specified, it will generate a random password.
+            Specify the account password. The password must be 16-32 characters long and start with any letter, number, or the following symbols: ! # $ % ^ & * ( ) _ + - =. If not specified, it will generate a random password.
           format: password
           writeOnly: true
           x-walrus-ui:
