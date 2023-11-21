@@ -13,20 +13,6 @@ components:
           type: object
           description: |
             Receive contextual information. When Walrus deploys, Walrus will inject specific contextual information into this field.
-
-            Examples:
-            ```
-            context:
-              project:
-                name: string
-                id: string
-              environment:
-                name: string
-                id: string
-              resource:
-                name: string
-                id: string
-            ```
           default: {}
           additionalProperties:
             type: object
@@ -34,7 +20,7 @@ components:
               colSpan: 12
           x-walrus-ui:
             colSpan: 12
-            group: Basic
+            group: Advanced
             hidden: true
             order: 1
         infrastructure:
@@ -42,13 +28,6 @@ components:
           type: object
           description: |
             Specify the infrastructure information for deploying.
-
-            Examples:
-            ```
-            infrastructure:
-              vpc_id: string                            # the ID of the VPC where the Redis service applies
-              domain_suffix: string, optional           # a private DNS namespace of the PrivateZone where to register the applied Redis service
-            ```
           required:
           - vpc_id
           properties:
@@ -68,7 +47,7 @@ components:
                 order: 1
           x-walrus-ui:
             colSpan: 12
-            group: Basic
+            group: Advanced
             order: 2
         architecture:
           title: Architecture
@@ -112,7 +91,7 @@ components:
           title: Engine Parameters
           type: array
           description: |
-            Specify the deployment parameters, see https://www.alibabacloud.com/help/zh/redis/user-guide/supported-parameters#concept-2087327.
+            Specify the deployment parameters. See https://www.alibabacloud.com/help/zh/redis/user-guide/supported-parameters#concept-2087327.
           default: []
           items:
             properties:
@@ -146,3 +125,7 @@ components:
           x-walrus-ui:
             group: Basic
             order: 7
+      x-walrus-ui:
+        groupOrder: 
+        - Basic
+        - Advanced
