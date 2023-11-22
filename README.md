@@ -82,7 +82,7 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_address"></a> [address](#output\_address) | The address, a string only has host, might be a comma separated string or a single string. |
-| <a name="output_address_readonly"></a> [address\_readonly](#output\_address\_readonly) | The readonly host, a string only has host, might be a comma separated string or a single string. |
+| <a name="output_address_readonly"></a> [address\_readonly](#output\_address\_readonly) | The readonly address, a string only has host, might be a comma separated string or a single string. |
 | <a name="output_connection"></a> [connection](#output\_connection) | The connection, a string combined host and port, might be a comma separated string or a single string. |
 | <a name="output_connection_readonly"></a> [connection\_readonly](#output\_connection\_readonly) | The readonly connection, a string combined host and port, might be a comma separated string or a single string. |
 | <a name="output_context"></a> [context](#output\_context) | The input context, a map, which is used for orchestration. |
