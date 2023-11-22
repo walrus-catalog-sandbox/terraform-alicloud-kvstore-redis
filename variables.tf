@@ -56,7 +56,7 @@ EOF
   type        = string
   default     = "standalone"
   validation {
-    condition     = var.architecture == null || contains(["standalone", "replication"], var.architecture)
+    condition     = var.architecture == "" || contains(["standalone", "replication"], var.architecture)
     error_message = "Invalid architecture"
   }
 }
@@ -68,7 +68,7 @@ EOF
   type        = number
   default     = 1
   validation {
-    condition     = contains([1, 3, 5], var.replication_readonly_replicas)
+    condition     = var.replication_readonly_replicas == 0 || contains([1, 3, 5], var.replication_readonly_replicas)
     error_message = "Invalid number of read-only replicas"
   }
 }
@@ -80,7 +80,7 @@ EOF
   type        = string
   default     = "5.0"
   validation {
-    condition     = contains(["5.0", "4.0"], var.engine_version)
+    condition     = var.engine_version == "" || contains(["5.0", "4.0"], var.engine_version)
     error_message = "Invalid version"
   }
 }
@@ -93,7 +93,7 @@ EOF
     name  = string
     value = string
   }))
-  default = []
+  default = null
 }
 
 variable "password" {
@@ -105,7 +105,7 @@ EOF
   default     = null
   sensitive   = true
   validation {
-    condition     = var.password == null || can(regex("^[A-Za-z0-9\\!#\\$%\\^&\\*\\(\\)_\\+\\-=]{16,32}", var.password))
+    condition     = var.password == null || var.password == "" || can(regex("^[A-Za-z0-9\\!#\\$%\\^&\\*\\(\\)_\\+\\-=]{16,32}", var.password))
     error_message = "Invalid password"
   }
 }

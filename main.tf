@@ -94,6 +94,8 @@ locals {
   name     = join("-", [local.resource_name, random_string.name_suffix.result])
   fullname = join("-", [local.namespace, local.name])
   password = coalesce(var.password, random_password.password.result)
+
+  replication_readonly_replicas = var.replication_readonly_replicas == 0 ? 1 : var.replication_readonly_replicas
 }
 
 #
@@ -136,12 +138,15 @@ data "alicloud_kvstore_instance_classes" "selected" {
   engine_version       = local.version
   zone_id              = data.alicloud_zones.selected.zones[0].id
   architecture         = local.architecture == "replication" ? "rwsplit" : "standard"
-  node_type            = local.architecture == "replication" ? local.node_type_map[var.replication_readonly_replicas] : null
+  node_type            = local.architecture == "replication" ? local.node_type_map[local.replication_readonly_replicas] : null
   instance_charge_type = "PostPaid"
 }
 
 locals {
-  config_map = { for param in var.engine_parameters : param.name => param.value }
+  parameters = {
+    for c in(var.engine_parameters != null ? var.engine_parameters : []) : c.name => c.value
+    if try(c.value != "", false)
+  }
 }
 
 resource "alicloud_kvstore_instance" "default" {
@@ -159,7 +164,7 @@ resource "alicloud_kvstore_instance" "default" {
 
   instance_class = data.alicloud_kvstore_instance_classes.selected.instance_classes[0]
 
-  config = local.config_map
+  config = local.parameters
 }
 
 #
