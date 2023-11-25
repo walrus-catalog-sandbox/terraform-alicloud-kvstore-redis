@@ -1,16 +1,14 @@
 locals {
   port = 6379
 
-  hosts = [
-    var.infrastructure.domain_suffix == null ?
-    format("%s", alicloud_kvstore_instance.default.connection_domain) :
-    format("%s.%s", alicloud_pvtz_zone_record.default[0].rr, var.infrastructure.domain_suffix)
-  ]
-  hosts_readonly = local.architecture == "replication" ? [
-    var.infrastructure.domain_suffix == null ?
-    format("%s", alicloud_kvstore_instance.default.connection_domain) :
-    format("%s.%s", alicloud_pvtz_zone_record.default[0].rr, var.infrastructure.domain_suffix)
-  ] : []
+  hosts = flatten([
+    local.publicly_accessible ? alicloud_kvstore_connection.default[*].connection_string : [
+      var.infrastructure.domain_suffix == null ?
+      format("%s", alicloud_kvstore_instance.default.connection_domain) :
+      format("%s.%s", alicloud_pvtz_zone_record.default[0].rr, var.infrastructure.domain_suffix)
+    ]
+  ])
+  hosts_readonly = local.architecture == "replication" ? local.hosts : []
 
   endpoints = [
     for c in local.hosts : format("%s:%d", c, local.port)

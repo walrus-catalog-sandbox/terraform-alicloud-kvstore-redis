@@ -112,6 +112,11 @@ locals {
     3 = "readthree"
     5 = "readfive"
   }
+  parameters = {
+    for c in(var.engine_parameters != null ? var.engine_parameters : []) : c.name => c.value
+    if try(c.value != "", false)
+  }
+  publicly_accessible = try(var.infrastructure.publicly_accessible, false)
 }
 
 data "alicloud_kvstore_instance_classes" "selected" {
@@ -123,19 +128,12 @@ data "alicloud_kvstore_instance_classes" "selected" {
   instance_charge_type = "PostPaid"
 }
 
-locals {
-  parameters = {
-    for c in(var.engine_parameters != null ? var.engine_parameters : []) : c.name => c.value
-    if try(c.value != "", false)
-  }
-}
-
 resource "alicloud_kvstore_instance" "default" {
   db_instance_name = local.fullname
   tags             = local.tags
 
   vswitch_id   = data.alicloud_vswitches.selected.ids[0]
-  security_ips = try(var.infrastructure.publicly_accessible, false) ? ["0.0.0.0/0", data.alicloud_vpcs.selected.vpcs[0].cidr_block] : [data.alicloud_vpcs.selected.vpcs[0].cidr_block]
+  security_ips = local.publicly_accessible ? ["0.0.0.0/0", data.alicloud_vpcs.selected.vpcs[0].cidr_block] : [data.alicloud_vpcs.selected.vpcs[0].cidr_block]
 
   engine_version = local.version
   password       = local.password
@@ -150,6 +148,14 @@ resource "alicloud_kvstore_instance" "default" {
 #
 # Exposing
 #
+
+resource "alicloud_kvstore_connection" "default" {
+  count = local.publicly_accessible ? 1 : 0
+
+  connection_string_prefix = format("%stf", alicloud_kvstore_instance.default.id)
+  instance_id              = alicloud_kvstore_instance.default.id
+  port                     = local.port
+}
 
 resource "alicloud_pvtz_zone_record" "default" {
   count = var.infrastructure.domain_suffix == null ? 0 : 1

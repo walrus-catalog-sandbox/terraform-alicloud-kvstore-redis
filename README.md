@@ -53,6 +53,7 @@ No modules.
 
 | Name | Type |
 |------|------|
+| [alicloud_kvstore_connection.default](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/resources/kvstore_connection) | resource |
 | [alicloud_kvstore_instance.default](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/resources/kvstore_instance) | resource |
 | [alicloud_pvtz_zone_record.default](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/resources/pvtz_zone_record) | resource |
 | [random_password.password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
