@@ -9,6 +9,8 @@ locals {
   namespace = join("-", [local.project_name, local.environment_name])
 
   tags = {
+    "Name" = join("-", [local.namespace, local.resource_name])
+
     "walrus.seal.io/project-id"       = local.project_id
     "walrus.seal.io/environment-id"   = local.environment_id
     "walrus.seal.io/resource-id"      = local.resource_id
@@ -91,9 +93,10 @@ resource "random_string" "name_suffix" {
 
 
 locals {
-  name     = join("-", [local.resource_name, random_string.name_suffix.result])
-  fullname = join("-", [local.namespace, local.name])
-  password = coalesce(var.password, random_password.password.result)
+  name        = join("-", [local.resource_name, random_string.name_suffix.result])
+  fullname    = join("-", [local.namespace, local.name])
+  description = "Created by Walrus catalog, and provisioned by Terraform."
+  password    = coalesce(var.password, random_password.password.result)
 
   replication_readonly_replicas = var.replication_readonly_replicas == 0 ? 1 : var.replication_readonly_replicas
 }
@@ -109,10 +112,11 @@ locals {
 # create security group.
 
 resource "alicloud_security_group" "target" {
-  name   = local.fullname
-  vpc_id = var.infrastructure.vpc_id
+  name        = local.fullname
+  description = local.description
+  tags        = local.tags
 
-  tags = local.tags
+  vpc_id = var.infrastructure.vpc_id
 }
 
 resource "alicloud_security_group_rule" "target" {
@@ -151,17 +155,17 @@ locals {
 
 resource "alicloud_kvstore_instance" "default" {
   db_instance_name = local.fullname
-  instance_type    = "Redis"
-  engine_version   = local.version
   tags             = local.tags
 
   vswitch_id        = data.alicloud_vswitches.selected.ids[0]
   security_group_id = alicloud_security_group.target.id
   security_ips      = [data.alicloud_vpcs.selected.vpcs[0].cidr_block]
 
-  password = local.password
-  port     = 6379
+  engine_version = local.version
+  password       = local.password
+  port           = 6379
 
+  instance_type  = "Redis"
   instance_class = data.alicloud_kvstore_instance_classes.selected.instance_classes[0]
 
   config = local.parameters
