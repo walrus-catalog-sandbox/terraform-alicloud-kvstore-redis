@@ -55,8 +55,6 @@ No modules.
 |------|------|
 | [alicloud_kvstore_instance.default](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/resources/kvstore_instance) | resource |
 | [alicloud_pvtz_zone_record.default](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/resources/pvtz_zone_record) | resource |
-| [alicloud_security_group.target](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/resources/security_group) | resource |
-| [alicloud_security_group_rule.target](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/resources/security_group_rule) | resource |
 | [random_password.password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 | [random_string.name_suffix](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
 | [alicloud_kvstore_instance_classes.selected](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/data-sources/kvstore_instance_classes) | data source |

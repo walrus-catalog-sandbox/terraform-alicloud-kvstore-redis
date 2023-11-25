@@ -94,10 +94,9 @@ resource "random_string" "name_suffix" {
 
 
 locals {
-  name        = join("-", [local.resource_name, random_string.name_suffix.result])
-  fullname    = join("-", [local.namespace, local.name])
-  description = "Created by Walrus catalog, and provisioned by Terraform."
-  password    = coalesce(var.password, random_password.password.result)
+  name     = join("-", [local.resource_name, random_string.name_suffix.result])
+  fullname = join("-", [local.namespace, local.name])
+  password = coalesce(var.password, random_password.password.result)
 
   replication_readonly_replicas = var.replication_readonly_replicas == 0 ? 1 : var.replication_readonly_replicas
 }
@@ -108,29 +107,6 @@ locals {
 
 locals {
   version = coalesce(var.engine_version, "5.0")
-}
-
-# create security group.
-
-resource "alicloud_security_group" "target" {
-  name        = local.fullname
-  description = local.description
-  tags        = local.tags
-
-  vpc_id = var.infrastructure.vpc_id
-}
-
-resource "alicloud_security_group_rule" "target" {
-  security_group_id = alicloud_security_group.target.id
-
-  type        = "ingress"
-  ip_protocol = "tcp"
-  cidr_ip     = data.alicloud_vpcs.selected.vpcs[0].cidr_block
-  port_range  = "6379/6379"
-  description = "Access Redis from VPC"
-}
-
-locals {
   node_type_map = {
     1 = "readone"
     3 = "readthree"
@@ -158,9 +134,8 @@ resource "alicloud_kvstore_instance" "default" {
   db_instance_name = local.fullname
   tags             = local.tags
 
-  vswitch_id        = data.alicloud_vswitches.selected.ids[0]
-  security_group_id = alicloud_security_group.target.id
-  security_ips      = [data.alicloud_vpcs.selected.vpcs[0].cidr_block]
+  vswitch_id   = data.alicloud_vswitches.selected.ids[0]
+  security_ips = try(var.infrastructure.publicly_accessible, false) ? ["0.0.0.0/0", data.alicloud_vpcs.selected.vpcs[0].cidr_block] : [data.alicloud_vpcs.selected.vpcs[0].cidr_block]
 
   engine_version = local.version
   password       = local.password
