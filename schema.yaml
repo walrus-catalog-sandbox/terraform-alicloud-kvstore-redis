@@ -42,7 +42,7 @@ components:
               title: Publicly Accessible
               type: boolean
               x-walrus-ui:
-                order: 4
+                order: 3
             domain_suffix:
               title: Domain Suffix
               type: string

@@ -35,13 +35,15 @@ Specify the infrastructure information for deploying.
 Examples:
 ```
 infrastructure:
-  vpc_id: string                            # the ID of the VPC where the Redis service applies
-  domain_suffix: string, optional           # a private DNS namespace of the PrivateZone where to register the applied Redis service
+  vpc_id: string                        # the ID of the VPC where the Redis service applies
+  domain_suffix: string, optional       # a private DNS namespace of the PrivateZone where to register the applied Redis service
+  publicly_accessible: bool, optional   # whether the Redis service is publicly accessible
 ```
 EOF
   type = object({
-    vpc_id        = string
-    domain_suffix = optional(string)
+    vpc_id              = string
+    domain_suffix       = optional(string)
+    publicly_accessible = optional(bool, false)
   })
 }
 
