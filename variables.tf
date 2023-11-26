@@ -87,17 +87,6 @@ EOF
   }
 }
 
-variable "engine_parameters" {
-  description = <<-EOF
-Specify the deployment parameters. See https://www.alibabacloud.com/help/en/redis/user-guide/supported-parameters.
-EOF
-  type = list(object({
-    name  = string
-    value = string
-  }))
-  default = []
-}
-
 variable "password" {
   description = <<-EOF
 Specify the account password. The password must be 16-32 characters long and start with any letter, number, or the following symbols: ! # $ % ^ & * ( ) _ + - =.

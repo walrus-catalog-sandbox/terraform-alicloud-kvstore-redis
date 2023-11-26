@@ -45,7 +45,7 @@ data "alicloud_vswitches" "selected" {
 
   lifecycle {
     postcondition {
-      condition     = local.architecture == "Replication" ? length(self.ids) > 1 : length(self.ids) > 0
+      condition     = local.architecture == "replication" ? length(self.ids) > 1 : length(self.ids) > 0
       error_message = "Failed to get available VSwitch"
     }
   }
@@ -67,6 +67,17 @@ data "alicloud_pvtz_zones" "selected" {
 
 data "alicloud_zones" "selected" {
   available_resource_creation = "KVStore"
+
+  lifecycle {
+    postcondition {
+      condition     = length(self.ids) > 0
+      error_message = "VPC needs multiple zones distributed in different VSwitches"
+    }
+    postcondition {
+      condition     = length(setintersection(self.ids, data.alicloud_vswitches.selected.vswitches[*].zone_id)) > 0
+      error_message = "VPC doesn't allow create KVStore"
+    }
+  }
 }
 
 #
@@ -112,25 +123,22 @@ locals {
     3 = "readthree"
     5 = "readfive"
   }
-  parameters = merge(
-    {
-      "lazyfree-lazy-eviction" = "yes"
-      "appendonly"             = false
-      "maxmemory-policy"       = "volatile-lru"
-      "timeout"                = "300"
-    },
-    {
-      for c in(var.engine_parameters != null ? var.engine_parameters : []) : c.name => c.value
-      if try(c.value != "", false)
-    }
-  )
   publicly_accessible = try(var.infrastructure.publicly_accessible, false)
+}
+
+locals {
+  zones = setintersection(data.alicloud_zones.selected.ids, data.alicloud_vswitches.selected.vswitches[*].zone_id)
+  vswitch_zone_map = {
+    for v in data.alicloud_vswitches.selected.vswitches : v.id => v.zone_id
+    if contains(local.zones, v.zone_id)
+  }
+  vswitches = keys(local.vswitch_zone_map)
 }
 
 data "alicloud_kvstore_instance_classes" "selected" {
   engine               = "Redis"
   engine_version       = local.version
-  zone_id              = data.alicloud_zones.selected.zones[0].id
+  zone_id              = local.vswitch_zone_map[local.vswitches[0]]
   architecture         = local.architecture == "replication" ? "rwsplit" : "standard"
   node_type            = local.architecture == "replication" ? local.node_type_map[local.replication_readonly_replicas] : null
   instance_charge_type = "PostPaid"
@@ -140,17 +148,15 @@ resource "alicloud_kvstore_instance" "default" {
   db_instance_name = local.fullname
   tags             = local.tags
 
-  vswitch_id   = data.alicloud_vswitches.selected.ids[0]
+  vswitch_id   = local.vswitches[0]
+  zone_id      = local.vswitch_zone_map[local.vswitches[0]]
   security_ips = local.publicly_accessible ? ["0.0.0.0/0", data.alicloud_vpcs.selected.vpcs[0].cidr_block] : [data.alicloud_vpcs.selected.vpcs[0].cidr_block]
 
   engine_version = local.version
   password       = local.password
-  port           = 6379
 
   instance_type  = "Redis"
   instance_class = data.alicloud_kvstore_instance_classes.selected.instance_classes[0]
-
-  config = local.parameters
 
   lifecycle {
     ignore_changes = [
