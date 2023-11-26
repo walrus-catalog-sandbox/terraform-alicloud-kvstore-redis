@@ -112,10 +112,18 @@ locals {
     3 = "readthree"
     5 = "readfive"
   }
-  parameters = {
-    for c in(var.engine_parameters != null ? var.engine_parameters : []) : c.name => c.value
-    if try(c.value != "", false)
-  }
+  parameters = merge(
+    {
+      "lazyfree-lazy-eviction" = "yes"
+      "appendonly"             = false
+      "maxmemory-policy"       = "volatile-lru"
+      "timeout"                = "300"
+    },
+    {
+      for c in(var.engine_parameters != null ? var.engine_parameters : []) : c.name => c.value
+      if try(c.value != "", false)
+    }
+  )
   publicly_accessible = try(var.infrastructure.publicly_accessible, false)
 }
 
@@ -143,6 +151,12 @@ resource "alicloud_kvstore_instance" "default" {
   instance_class = data.alicloud_kvstore_instance_classes.selected.instance_classes[0]
 
   config = local.parameters
+
+  lifecycle {
+    ignore_changes = [
+      password
+    ]
+  }
 }
 
 #

@@ -105,7 +105,7 @@ components:
           title: Engine Parameters
           type: array
           description: |
-            Specify the deployment parameters. See https://www.alibabacloud.com/help/zh/redis/user-guide/supported-parameters#concept-2087327.
+            Specify the deployment parameters. See https://www.alibabacloud.com/help/en/redis/user-guide/supported-parameters.
           default: []
           nullable: true
           items:

@@ -89,7 +89,7 @@ EOF
 
 variable "engine_parameters" {
   description = <<-EOF
-Specify the deployment parameters. See https://www.alibabacloud.com/help/zh/redis/user-guide/supported-parameters#concept-2087327.
+Specify the deployment parameters. See https://www.alibabacloud.com/help/en/redis/user-guide/supported-parameters.
 EOF
   type = list(object({
     name  = string
