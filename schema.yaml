@@ -4,11 +4,11 @@ info:
 components:
   schemas:
     variables:
+      type: object
       required:
       - infrastructure
       - architecture
       - engine_version
-      type: object
       properties:
         context:
           title: Context
@@ -34,28 +34,28 @@ components:
           required:
           - vpc_id
           properties:
+            domain_suffix:
+              description: |
+                Specify the domain suffix of the PrivateZone. The domain suffix must be a valid DNS name.
+              nullable: true
+              title: Domain Suffix
+              type: string
+              x-walrus-ui:
+                order: 2
             publicly_accessible:
+              default: false
               description: |
                 Specify whether to enable public access. If enabled, the Redis service can be accessed from the public network.
-              default: false
               nullable: true
               title: Publicly Accessible
               type: boolean
               x-walrus-ui:
                 order: 3
-            domain_suffix:
-              title: Domain Suffix
-              type: string
-              description: |
-                Specify the domain suffix of the PrivateZone. The domain suffix must be a valid DNS name.
-              nullable: true
-              x-walrus-ui:
-                order: 2
             vpc_id:
-              title: Vpc Id
-              type: string
               description: |
                 Specify the ID of the VPC where the Redis service applies.
+              title: Vpc Id
+              type: string
               x-walrus-ui:
                 order: 1
           x-walrus-ui:
@@ -71,6 +71,7 @@ components:
           enum:
           - standalone
           - replication
+          nullable: true
           x-walrus-ui:
             group: Basic
             order: 3
@@ -80,11 +81,11 @@ components:
           description: |
             Specify the number of read-only replicas under the replication deployment.
           default: 1
-          nullable: true
           enum:
           - 1
           - 3
           - 5
+          nullable: true
           x-walrus-ui:
             group: Basic
             order: 4
@@ -98,24 +99,25 @@ components:
           enum:
           - "5.0"
           - "4.0"
+          nullable: true
           x-walrus-ui:
             group: Basic
             order: 5
         password:
           title: Password
-          maxLength: 32
-          minLength: 16
           type: string
           description: |
             Specify the account password. The password must be 16-32 characters long and start with any letter, number, or the following symbols: ! # $ % ^ & * ( ) _ + - =.
             If not specified, it will generate a random password.
-          nullable: true
           format: password
+          nullable: true
           writeOnly: true
+          minLength: 16
+          maxLength: 32
           x-walrus-ui:
             group: Basic
             order: 7
       x-walrus-ui:
-        groupOrder: 
+        groupOrder:
         - Basic
         - Advanced
