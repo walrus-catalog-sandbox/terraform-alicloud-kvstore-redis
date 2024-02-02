@@ -19,7 +19,6 @@ components:
             domain_suffix:
               description: |
                 Specify the domain suffix of the PrivateZone. The domain suffix must be a valid DNS name.
-              nullable: true
               title: Domain Suffix
               type: string
               x-walrus-ui:
@@ -28,7 +27,6 @@ components:
               default: false
               description: |
                 Specify whether to enable public access. If enabled, the Redis service can be accessed from the public network.
-              nullable: true
               title: Publicly Accessible
               type: boolean
               x-walrus-ui:
@@ -53,7 +51,6 @@ components:
           enum:
           - standalone
           - replication
-          nullable: true
           x-walrus-ui:
             group: Basic
             order: 3
@@ -67,7 +64,6 @@ components:
           - 1
           - 3
           - 5
-          nullable: true
           x-walrus-ui:
             group: Basic
             order: 4
@@ -81,7 +77,6 @@ components:
           enum:
           - "5.0"
           - "4.0"
-          nullable: true
           x-walrus-ui:
             group: Basic
             order: 5
@@ -92,7 +87,6 @@ components:
             Specify the account password. The password must be 16-32 characters long and start with any letter, number, or the following symbols: ! # $ % ^ & * ( ) _ + - =.
             If not specified, it will generate a random password.
           format: password
-          nullable: true
           writeOnly: true
           minLength: 16
           maxLength: 32
