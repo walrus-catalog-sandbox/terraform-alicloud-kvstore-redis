@@ -3,13 +3,6 @@
 Deploy Redis service in replication architecture by root module.
 
 ```bash
-# setup infra
-$ terraform apply -auto-approve \
-  -target=alicloud_vpc.example \
-  -target=alicloud_vswitch.example \
-  -target=alicloud_pvtz_zone.example \
-  -target=alicloud_pvtz_zone_attachment.example
-
 # create service
 $ terraform apply -auto-approve
 ```
@@ -25,9 +18,7 @@ $ terraform apply -auto-approve
 
 ## Providers
 
-| Name | Version |
-|------|---------|
-| <a name="provider_alicloud"></a> [alicloud](#provider\_alicloud) | >= 1.140.0 |
+No providers.
 
 ## Modules
 
@@ -37,11 +28,7 @@ $ terraform apply -auto-approve
 
 ## Resources
 
-| Name | Type |
-|------|------|
-| [alicloud_vpc.example](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/resources/vpc) | resource |
-| [alicloud_vswitch.example](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/resources/vswitch) | resource |
-| [alicloud_zones.selected](https://registry.terraform.io/providers/aliyun/alicloud/latest/docs/data-sources/zones) | data source |
+No resources.
 
 ## Inputs
 
