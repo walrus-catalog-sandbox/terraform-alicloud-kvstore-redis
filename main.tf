@@ -9,7 +9,7 @@ locals {
   namespace = join("-", [local.project_name, local.environment_name])
 
   tags = {
-    "Name" = join("-", [local.namespace, local.resource_name])
+    "Name" = local.resource_name
 
     "walrus.seal.io/catalog-name"     = "terraform-alicloud-kvstore-redis"
     "walrus.seal.io/project-id"       = local.project_id
@@ -129,7 +129,6 @@ resource "random_string" "name_suffix" {
 
 locals {
   name     = join("-", [local.resource_name, random_string.name_suffix.result])
-  fullname = join("-", [local.namespace, local.name])
   password = coalesce(var.password, random_password.password.result)
 
   replication_readonly_replicas = var.replication_readonly_replicas == 0 ? 1 : var.replication_readonly_replicas
@@ -168,7 +167,7 @@ data "alicloud_kvstore_instance_classes" "selected" {
 }
 
 resource "alicloud_kvstore_instance" "default" {
-  db_instance_name = local.fullname
+  db_instance_name = local.name
   tags             = local.tags
 
   vswitch_id   = local.vswitches[0]
