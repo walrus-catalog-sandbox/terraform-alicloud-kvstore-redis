@@ -186,6 +186,8 @@ resource "alicloud_kvstore_instance" "default" {
       password
     ]
   }
+
+  depends_on = [alicloud_vswitch.default]
 }
 
 #
