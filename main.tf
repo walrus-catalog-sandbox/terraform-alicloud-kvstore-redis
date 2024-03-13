@@ -129,7 +129,7 @@ resource "random_string" "name_suffix" {
 
 locals {
   name     = join("-", [local.resource_name, random_string.name_suffix.result])
-  fullname = join("-", [local.namespace, local.name])
+  fullname = format("walrus-%s", md5(join("-", [local.namespace, local.name])))
   password = coalesce(var.password, random_password.password.result)
 
   replication_readonly_replicas = var.replication_readonly_replicas == 0 ? 1 : var.replication_readonly_replicas
